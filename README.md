@@ -1,4 +1,4 @@
 cursoxml
 ========
 
-Ejemplo curso XML
+Ejemplos para un curso XML
