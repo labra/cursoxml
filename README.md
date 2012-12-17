@@ -1,0 +1,4 @@
+cursoxml
+========
+
+Ejemplo curso XML
