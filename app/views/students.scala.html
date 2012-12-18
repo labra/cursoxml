@@ -1,0 +1,41 @@
+@(students: List[Student], studentForm: Form[Student])
+
+@import helper._
+
+@main("Curso XML") {
+    
+    <h2>Admin Students</h2>
+
+    <p>Number of students: @students.size</h2>
+    <table>
+        @students.map { student =>
+            <tr>
+              <td>@student.dni</td>
+              <td>@student.firstName</td>
+              <td>@student.lastName</td>
+              <td>@form(routes.Admin.deleteStudent(student.id.get)) {
+                    <input type="submit" value="Delete">
+                }
+              </td>
+            </tr>
+        }
+    </table>
+    
+    <h2>Add Student</h2>
+    
+    @form(routes.Admin.newStudent()) {
+        
+        <fieldset>
+            @inputText(studentForm("dni"), '_label -> "DNI")
+            @inputText(studentForm("firstName"), '_label -> "First name")
+            @inputText(studentForm("lastName"), '_label -> "Last name")
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="New Student" class="btn primary"> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+    }
+
+    
+}

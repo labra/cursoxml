@@ -1,0 +1,32 @@
+@(courses: List[Course], courseForm: Form[String])
+
+@import helper._
+
+@main("Courses") {
+    
+    <h2>Admin Courses</h2>
+    
+    <p>Number of Courses: @courses.size</p>
+    <ul>
+        @courses.map { course =>
+            <li>
+                @course.courseName
+                
+                @form(routes.Admin.deleteCourse(course.id.get)) {
+                    <input type="submit" value="Delete">
+                }
+            </li>
+        }
+    </ul>
+    
+    <h2>Course</h2>
+    
+    @form(routes.Admin.newCourse) {
+        
+        @inputText(courseForm("courseName"), '_label -> "New Course") 
+        
+        <input type="submit" value="@Messages("Create") ">
+        
+    }
+    
+}

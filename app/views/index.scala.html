@@ -1,0 +1,18 @@
+@(searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
+
+@import helper._
+
+@main("CursoXML") {
+    
+    <h2 class="result">@flash.get("message").getOrElse("")</h2>
+    
+    @form(routes.Application.searchEnrolment) {
+	  <fieldset>        
+        @inputText(searchForm("course"), '_label -> "Course") 
+        @inputText(searchForm("dni"), '_label -> "DNI") 
+      </fieldset>  
+      <input type="submit" value="@Messages("Search") ">
+        
+    }
+    
+}
