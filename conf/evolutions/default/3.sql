@@ -9,7 +9,7 @@ CREATE TABLE enrolment (
     id 				bigint NOT NULL DEFAULT nextval('enrolment_id_seq') not null,
     courseId 		bigint not null,
     studentId 		bigint not null,
-    note 			double,
+    grade 			double,
     constraint 		pk_enrolment primary key (id)
 );
 

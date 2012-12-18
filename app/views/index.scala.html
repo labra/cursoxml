@@ -1,4 +1,4 @@
-@(enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
+@(course: Option[Course], enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
 
 @import helper._
 
@@ -6,10 +6,29 @@
     
     <h2 class="result">@flash.get("message").getOrElse("")</h2>
     
+    @if(course.isEmpty) {
+     <p>Search a course code (ex. xml) </p>
+    } else {
+     <p>Course: @course.get.name (@course.get.code)</p>
+     <table>
+        <tr>
+        <th>@Messages("First Name")</th>
+        <th>@Messages("Last Name")</th>
+        <th>@Messages("Grade")</th>
+        </tr>
+        @enrolments.map { t =>
+        <tr>
+         <td>@t._1.firstName</td>
+         <td>@t._1.lastName</td>
+         <td>@t._2</td>
+      	<tr>
+      	}
+      </tr>
+     </table>
+    }
     @form(routes.Application.searchEnrolment) {
 	  <fieldset>        
         @inputText(searchForm("course"), '_label -> "Course") 
-        @inputText(searchForm("dni"), '_label -> "DNI") 
       </fieldset>  
       <input type="submit" value="@Messages("Search") ">
         

@@ -46,7 +46,7 @@ object Admin extends Controller {
             Course.lookup(vt.course) match {
               case None => Ok("Course " + vt.course + " not found. Create Course before")
               case Some(courseId) => 
-                Enrolment.create(courseId,studentId,vt.note)
+                Enrolment.create(courseId,studentId,vt.grade)
                 Redirect(routes.Admin.enrolments)
             }
         }
@@ -95,7 +95,7 @@ object Admin extends Controller {
       "id" -> of[Long],
       "course" -> nonEmptyText,
       "dni" -> nonEmptyText,
-      "note" -> of[Double]
+      "grade" -> of[Double]
      )(ViewEnrolment.apply)(ViewEnrolment.unapply)
   )
   
@@ -111,7 +111,7 @@ object Admin extends Controller {
     Enrolment.all().map(t => ViewEnrolment(t.id.get,
         Course.findCourseName(t.courseId).getOrElse("Not found"), 
         Student.findDNI(t.studentId).getOrElse("Not found"),
-        t.note.toInt)
+        t.grade.toDouble)
     )
   }
 

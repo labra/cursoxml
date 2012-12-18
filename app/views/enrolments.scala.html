@@ -17,7 +17,7 @@
         <tr>
             <td>@t.course</td>
             <td>@t.dni</td>
-            <td>@t.note</td>
+            <td>@t.grade</td>
             <td>@form(routes.Admin.deleteEnrolment(t.id)) {
                     <input type="submit" value="@Messages("Delete")(defaultLanguage)">
                 }</td>
@@ -33,7 +33,7 @@
         	<input type="hidden" name="id" value='0' >  
             @inputText(enrolmentForm("course"), '_label -> "Course")
             @inputText(enrolmentForm("dni"), '_label -> "DNI")
-            @inputText(enrolmentForm("note"), '_label -> "Note")
+            @inputText(enrolmentForm("grade"), '_label -> "Grade")
         </fieldset>
         
         <div class="actions">

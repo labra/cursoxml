@@ -64,16 +64,19 @@ def create(code: String, name: String, starts: String, ends: String) {
       }
     }
   }
- 
+
+ def findCourse(code : String) : Option[Course] = {
+   for {
+     id <- lookup(code)
+     course <- find(id)
+   } yield course
+ }
+
  def findCourseName(id : Long) : Option[String] = {
-    val found = DB.withConnection { implicit c =>
-    SQL("select * from course where id = {id}").on(
-    		'id -> id
-    	).as(course *)
-	}
-    if (found.isEmpty) None
-    else Some(found.head.name)
-  }
+   for {
+     course <- find(id)
+   } yield course.name
+ }
 
  def find(id : Long) : Option[Course] = {
     val found = DB.withConnection { implicit c =>

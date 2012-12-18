@@ -17,14 +17,14 @@ object Application extends Controller {
   implicit val flash = new play.api.mvc.Flash(Map(("message",""))) 
 
   def index = Action { implicit request =>
-    Ok(views.html.index(List(),searchForm))
+    Ok(views.html.index(None, List(),searchForm))
   }
 
   def about = Action { implicit request =>
     Ok(views.html.about())
   }
   
-  def home(flash : Flash) = views.html.index(List(),searchForm)(flash)
+  def home(flash : Flash) = views.html.index(None,List(),searchForm)(flash)
   
 /*  def format = Action { implicit request =>
     formatForm.bindFromRequest.fold(
@@ -43,13 +43,13 @@ object Application extends Controller {
 */
   
   def searchEnrolment = Action { implicit request =>
-
     searchForm.bindFromRequest.fold(
-    errors => BadRequest(views.html.index(List(),errors)),
+    errors => BadRequest(views.html.index(None,List(),errors)),
     searchField => {
-      val course = searchField.course
-      val enrols = Enrolment.lookupEnrolment(course)
-      Ok(views.html.index(List(),searchForm))
+      val code = searchField.course
+      val course = Course.findCourse(code)
+      val enrols = Enrolment.lookupEnrolment(code)
+      Ok(views.html.index(course, enrols,searchForm))
     }
    ) 
   }
