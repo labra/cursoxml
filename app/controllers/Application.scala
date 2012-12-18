@@ -41,6 +41,7 @@ object Application extends Controller {
     )
   }
 */
+  
   def searchEnrolment = Action { implicit request =>
 
     searchForm.bindFromRequest.fold(
@@ -48,7 +49,7 @@ object Application extends Controller {
     searchField => {
       val course = searchField.course
       val enrols = Enrolment.lookupEnrolment(course)
-      views.html.index(List(),searchForm) // (flash)
+      Ok(views.html.index(List(),searchForm))
     }
    ) 
   }
