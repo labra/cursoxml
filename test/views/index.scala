@@ -15,14 +15,14 @@ class IndexSpec extends Specification {
 
   def e1 = {
     implicit val flash = new play.api.mvc.Flash(Map(("message","My flash"))) 
-	val html = views.html.index(Seq(), Application.searchForm)
+	val html = views.html.index(Application.searchForm)
     contentType(html) must equalTo("text/html")
     contentAsString(html) must contain("My flash")
   }
   
   def e2 = {
     implicit val flash = new play.api.mvc.Flash(Map(("message","My flash"))) 
-	val html = views.html.index(Seq(), Application.searchForm)
+	val html = views.html.index(Application.searchForm)
     contentType(html) must equalTo("text/html")
     contentAsString(html) must contain("My flash")
   }

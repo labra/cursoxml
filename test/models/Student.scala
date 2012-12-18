@@ -5,39 +5,41 @@ import play.api.test._
 import play.api.test.Helpers._
 import anorm._
 
-class LanguageSpec extends Specification {
+class StudentSpec extends Specification {
 
-  "create Language" in {
+  "create Student" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      val langCode = "es"
-      val langName = "Spanish"
-      Language.create(langCode,langName)
-      val id = Language.lookup(langCode)
+      val dni = "22"
+      val firstName = "Jose"
+      val lastName = "Jose"
+      Student.create(dni,firstName,lastName)
+      val id = Student.lookup(dni)
 	  id must beSome  
     }
    }
   
-  "create the same language several times" in {
+  "create the same student several times" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      val langCode = "es"
-      val langName = "Spanish"
-      Language.create(langCode,langName)
-      Language.create(langCode,langName)
-      Language.create(langCode,langName)
-      val id = Language.lookup(langCode)
+      val dni = "22"
+      val firstName = "Jose"
+      val lastName = "Jose"
+      Student.create(dni,firstName,lastName)
+      Student.create(dni,firstName,lastName)
+      Student.create(dni,firstName,lastName)
+      val id = Student.lookup(dni)
 	  id must beSome  
     }
    }
 
-    "delete Language" in {
+    "delete Student" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      Language.create("es","Español")
-      Language.create("en", "English")
+      Student.create("22","Jose","Labra")
+      Student.create("33", "Juan","Torre")
 
-      val id = Language.lookup("es")
+      val id = Student.lookup("22")
       id must beSome  
-      Language.delete(Id(id.get))
-      val id2 = Language.lookup("es")
+      Student.delete(Id(id.get))
+      val id2 = Student.lookup("22")
       id2 must beNone
     }
    }

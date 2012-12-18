@@ -8,7 +8,7 @@ import models._
 
 class AdminSpec extends Specification { def is = 
   
-  "Specification of Labels4all Admin" 						^
+  "Specification of Course XML Admin" 						^
   															p^
   "The application should" 									^
   	"authenticate"											!e1^

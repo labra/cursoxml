@@ -5,26 +5,25 @@ import play.api.test._
 import play.api.test.Helpers._
 
 
-class TranslationSpec extends Specification {
+class EnrolmentSpec extends Specification {
 
-  "create a translation" in {
+  "create an enrolment" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      val langCode = "es"
-      val langName = "Spanish"
-      Language.create(langCode,langName)
-      val idLang = Language.lookup(langCode)
+      val dni = "22"
+      Student.create(dni,"Jose","Labra")
+      val idStudent = Student.lookup(dni)
       
-      val foafPerson = "http://xmlns.com/foaf/0.1/Person"
-      IRI.create(foafPerson)
-      val idIRI = IRI.lookup(foafPerson)
+      val code = "xml"
+      Course.create(code,"XML Course", "", "")
+      val idCourse = Course.lookup(code)
       
-      Translation.create(idIRI.get,idLang.get,"Persona",1)
+      Enrolment.create(idCourse.get,idStudent.get,4.5)
 
-      val idt = Translation.lookupIds(idIRI.get,idLang.get)
+      val idt = Enrolment.lookupIds(idCourse.get,idStudent.get)
 	  idt must beSome
-	  val t = Translation.findById(idt.get)
+	  val t = Enrolment.findById(idt.get)
 	  t must beSome
-	  t.get.transLabel must beEqualTo("Persona")
+	  t.get.note must beEqualTo(4.5)
     }
    }
 
