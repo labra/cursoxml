@@ -18,8 +18,8 @@ object Admin extends Controller {
   def newCourse = Action { implicit request =>
   	courseForm.bindFromRequest.fold(
     errors => Ok("Errors" + errors), // BadRequest(views.html.index(searchForm)),
-    courseName => {
-      Course.create(courseName)
+    course => {
+      Course.create(course.code,course.name,course.starts,course.ends)
       Redirect(routes.Admin.courses)
     }
    )
@@ -70,8 +70,14 @@ object Admin extends Controller {
   Redirect(routes.Admin.enrolments)
 }
 
-  val courseForm : Form[String] = Form(
-      "courseName" -> nonEmptyText
+  val courseForm : Form[Course] = Form(
+      mapping(
+      "id" -> ignored(NotAssigned:Pk[Long]),
+      "code" -> nonEmptyText,
+      "name" -> nonEmptyText,
+      "starts" -> text,
+      "ends" -> text
+      )(Course.apply)(Course.unapply)
   )
 
   
@@ -89,7 +95,7 @@ object Admin extends Controller {
       "id" -> of[Long],
       "course" -> nonEmptyText,
       "dni" -> nonEmptyText,
-      "note" -> of[Int]
+      "note" -> of[Double]
      )(ViewEnrolment.apply)(ViewEnrolment.unapply)
   )
   

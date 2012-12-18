@@ -5,6 +5,7 @@ test*.db
 .classpath
 .project
 .target/*
+.settings/*
 # sbt specific
 dist/*
 target/

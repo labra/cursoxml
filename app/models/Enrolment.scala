@@ -10,7 +10,7 @@ case class Enrolment(
 	id: Pk[Long],
 	courseId : Long, 
 	studentId: Long,
-    note : Int
+    note : Double
 )
 
 object Enrolment {
@@ -19,7 +19,7 @@ object Enrolment {
 	get[Pk[Long]]("id") ~ 
 	get[Long]("courseId") ~ 
 	get[Long]("studentId") ~ 
-	get[Int]("note") map {
+	get[Double]("note") map {
   	  case id ~
   	  	   courseId ~
   	  	   studentId ~
@@ -31,10 +31,10 @@ object Enrolment {
   
   
   def all(): List[Enrolment] = DB.withConnection { implicit c =>
-  	SQL("select * from translation").as(enrolment *)
+  	SQL("select * from enrolment").as(enrolment *)
   }
   
-  def create(courseId: Long, studentId: Long, note: Int) {
+  def create(courseId: Long, studentId: Long, note: Double) {
     DB.withConnection { implicit c =>
       SQL("insert into enrolment (courseId,studentId,note) values (%s, %s, %s)".
 	  	     format(courseId,studentId,note)).executeUpdate()
