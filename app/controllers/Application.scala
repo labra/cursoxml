@@ -17,16 +17,14 @@ object Application extends Controller {
   implicit val flash = new play.api.mvc.Flash(Map(("message",""))) 
 
   def index = Action { implicit request =>
-
-    Ok(views.html.index(searchForm))
+    Ok(views.html.index(List(),searchForm))
   }
 
   def about = Action { implicit request =>
     Ok(views.html.about())
   }
   
-  def home(flash : Flash) = views.html.index(searchForm)(flash)
-  def transResult(viewEnrol : ViewEnrolment) = Ok(views.html.result(viewEnrol))
+  def home(flash : Flash) = views.html.index(List(),searchForm)(flash)
   
 /*  def format = Action { implicit request =>
     formatForm.bindFromRequest.fold(
@@ -46,26 +44,18 @@ object Application extends Controller {
   def searchEnrolment = Action { implicit request =>
 
     searchForm.bindFromRequest.fold(
-    errors => BadRequest(views.html.index(errors)),
+    errors => BadRequest(views.html.index(List(),errors)),
     searchField => {
       val course = searchField.course
-      val dni = searchField.dni
-      val result = Enrolment.lookupEnrolment(course, dni)
-      result match { 
-        case None => NotFound("Not found")
-        case Some(enrol) => 
-              val viewEnrol = ViewEnrolment(enrol.id.get,course,dni,enrol.note)
-              Ok("Result: " + viewEnrol)
-              
-      }
+      val enrols = Enrolment.lookupEnrolment(course)
+      views.html.index(List(),searchForm) // (flash)
     }
    ) 
   }
 
   val searchForm : Form[SearchField] = Form (
      mapping(
-      "course" -> nonEmptyText,
-      "dni" -> nonEmptyText
+      "course" -> nonEmptyText
      )(SearchField.apply)(SearchField.unapply)
   )
 

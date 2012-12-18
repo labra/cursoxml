@@ -66,12 +66,9 @@ object Enrolment {
         else Some(ids.head)
   }
     
-  def lookupEnrolment(courseStr : String, dni: String) : Option[Enrolment] = {
-    for { idCourse <- Course.lookup(courseStr)
-          idStud <- Student.lookup(dni)
-          id <- Enrolment.lookupIds(idCourse,idStud)
-          tr <- Enrolment.findById(id)
-    } yield tr
+  def lookupEnrolment(courseStr : String) : List[(Student,Double)] = {
+    List((new Student(Id(1),"12","Jose","Labra"),2.5),
+         (new Student(Id(2),"13","Juan","Torre"),7.5))
   }
   
   def findById(id : Long) : Option[Enrolment] = {
