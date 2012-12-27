@@ -50,7 +50,8 @@ object Enrolment {
   def all(): List[Enrolment] = DB.withConnection { implicit c =>
   	SQL("select * from enrolment").as(enrolment *)
   }
-  
+
+
   def create(courseId: Long, studentId: Long, grade: Double) {
     DB.withConnection { implicit c =>
       SQL("insert into enrolment (courseId,studentId,grade) values (%s, %s, %s)".
@@ -115,3 +116,10 @@ object Enrolment {
   }
 
 }
+
+case class ViewEnrolment(
+	id: Long,
+	course: String,
+    dni : String, 
+	grade : Double
+)

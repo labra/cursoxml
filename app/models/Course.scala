@@ -24,24 +24,24 @@ object Course {
   	}
   }
   
-  def all(): List[Course] = DB.withConnection { implicit c =>
+def all(): List[Course] = DB.withConnection { implicit c =>
   	SQL("select * from course").as(course *)
   }
   
-def create(code: String, name: String, starts: String, ends: String) {
+def create(course: Course) {
   // Insert a course only if it did not exist
-  if (lookup(code) == None) 
+  if (lookup(course.code) == None) 
    DB.withConnection { implicit c =>
      SQL("insert into course (code,name,starts,ends) values ({code},{name},{starts},{ends})").on(
-       'code -> code,
-       'name -> name,
-       'starts -> starts,
-       'ends -> ends
+       'code -> course.code,
+       'name -> course.name,
+       'starts -> course.starts,
+       'ends -> course.ends
      ).executeUpdate()
    }
 }
 
- def delete(id: Pk[Long]) {
+def delete(id: Pk[Long]) {
   DB.withConnection { implicit c =>
     SQL("delete from course where id = {id}").on(
     		'id -> id

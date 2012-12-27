@@ -17,7 +17,12 @@ object Application extends Controller {
   implicit val flash = new play.api.mvc.Flash(Map(("message",""))) 
 
   def index = Action { implicit request =>
-    Ok(views.html.index(None, List(),searchForm))
+    
+    request match {
+      case Accepts.Html() => Ok(views.html.index(None, List(),searchForm))
+      case Accepts.Json() => Ok("JSON")
+      case Accepts.Xml() => Ok("XML")
+    }
   }
 
   def about = Action { implicit request =>
@@ -25,22 +30,6 @@ object Application extends Controller {
   }
   
   def home(flash : Flash) = views.html.index(None,List(),searchForm)(flash)
-  
-/*  def format = Action { implicit request =>
-    formatForm.bindFromRequest.fold(
-        errors => BadRequest("Error: " + errors.toString()),
-        formatField => {
-          val viewTrans = ViewTranslation(formatField.id,formatField.iriName,formatField.langName,formatField.label)
-          contentNegotiation(Some(formatField.format)) match {
-            case HTML() => prepareHTML(viewTrans)
-            case TURTLE() => prepareTurtle(viewTrans)
-            case JSON() => prepareJson(viewTrans)
-            case _ => prepareHTML(viewTrans)
-          }
-        }
-    )
-  }
-*/
   
   def searchEnrolment = Action { implicit request =>
     searchForm.bindFromRequest.fold(

@@ -16,6 +16,7 @@
      </tr>
         @courses.map { course =>
             <tr>
+            <td>@course.id</td>
             <td>@course.code</td>
             <td>@course.name</td>
             <td>@course.starts</td>
@@ -32,6 +33,7 @@
     
     @form(routes.Admin.newCourse) {
         
+        @inputText(courseForm("id"), '_label -> "id")
         @inputText(courseForm("code"), '_label -> "code")
         @inputText(courseForm("name"), '_label -> "name")
         @inputText(courseForm("starts"), '_label -> "starts")

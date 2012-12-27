@@ -26,23 +26,15 @@ object Student {
   	SQL("select * from student").as(student *)
   }
   
-  def create(dni : String, firstName: String, lastName: String) {
+  def create(student: Student) {
     // Only creates a new language if it didn't exist
-    if (lookup(dni) == None)
-	  DB.withConnection { implicit c =>
-	  	SQL("insert into student (dni, firstName, lastName) values ('%s', '%s', '%s')".
-	  	     format(dni,firstName,lastName)).executeUpdate()
-	  }
-  }
-  
-  def insert(student : Student) {
     if (lookup(student.dni) == None)
 	  DB.withConnection { implicit c =>
 	  	SQL("insert into student (dni, firstName, lastName) values ('%s', '%s', '%s')".
 	  	     format(student.dni,student.firstName,student.lastName)).executeUpdate()
 	  }
   }
-
+  
   def delete(id: Pk[Long]) {
 		DB.withConnection { implicit c =>
     	SQL("delete from student where id = {id}").on(

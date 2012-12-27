@@ -9,37 +9,82 @@ import models._
 import play.api.i18n._
 import anorm._
 
-object Admin extends Controller {
+object Admin extends Controller  with Secured {
   
-  def admin = Action {
-    Ok(views.html.admin())
+  // -- Authentication
+
+  val loginForm = Form(
+    tuple(
+      "email" -> text,
+      "password" -> text
+    ) verifying ("Invalid email or password", result => result match {
+      case (email, password) => User.authenticate(email, password).isDefined
+    })
+  )
+
+  /**
+   * Login page.
+   */
+  def login = Action { implicit request =>
+    Ok(views.html.login(loginForm))
+  }
+
+  /**
+   * Handle login form submission.
+   */
+  def authenticate = Action { implicit request =>
+    loginForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.login(formWithErrors)),
+      user => Redirect(routes.Admin.admin).withSession("email" -> user._1)
+    )
+  }
+
+  /**
+   * Logout and clean the session.
+   */
+  def logout = Action {
+    Redirect(routes.Admin.login).withNewSession.flashing(
+      "success" -> "You've been logged out"
+    )
+  }
+
+  
+  def admin = IsAuthenticated { username => _ =>
+    User.findByEmail(username).map { user =>
+      Ok(views.html.admin())
+    }.getOrElse(Forbidden)
   }
   
-  def newCourse = Action { implicit request =>
+  
+  def newCourse = IsAuthenticated { username => implicit request =>
   	courseForm.bindFromRequest.fold(
     errors => Ok("Errors" + errors), // BadRequest(views.html.index(searchForm)),
     course => {
-      Course.create(course.code,course.name,course.starts,course.ends)
+      Course.create(course)
       Redirect(routes.Admin.courses)
     }
    )
   }	  
  
-  def newStudent = Action { implicit request =>
+  def newStudent = IsAuthenticated { username => implicit request =>
  	studentForm.bindFromRequest.fold(
     errors => Ok("Error " + errors.toString()), // BadRequest(views.html.index(Language.all(), errors)),
     student => {
-      Student.insert(student)
+      Student.create(student)
       Redirect(routes.Admin.students)
     }
    ) 
   }
   
-   def newEnrolment = Action { 
+   def newEnrolment = IsAuthenticated { username =>
     implicit request =>
   	 enrolmentForm.bindFromRequest.fold(
       errors => Ok("Error " + errors.toString()), // BadRequest(views.html.index(Trans.all(), errors)),
-      vt => {
+      vt => createFromView(vt)
+   )
+  }
+
+  def createFromView(vt: ViewEnrolment) : Result = {
         Student.lookup(vt.dni) match {
           case None => Ok("Student " + vt.dni + " not found. Create student before")
           case Some(studentId) =>
@@ -50,21 +95,20 @@ object Admin extends Controller {
                 Redirect(routes.Admin.enrolments)
             }
         }
-      }
-   )
   }
-
-  def deleteCourse(id: Long) = Action {
+  
+   
+  def deleteCourse(id: Long) = IsAuthenticated { username => implicit request =>
 	  Course.delete(Id(id))
 	  Redirect(routes.Admin.courses)
   }
 
- def deleteStudent(id: Long) = Action {
+ def deleteStudent(id: Long) = IsAuthenticated { username => implicit request =>
   Student.delete(Id(id))
   Redirect(routes.Admin.students)
 }
 
- def deleteEnrolment(id: Long) = Action {
+ def deleteEnrolment(id: Long) = IsAuthenticated { username => implicit request =>
   Enrolment.delete(Id(id))
   Ok("Deleted enrolment " + id)
   Redirect(routes.Admin.enrolments)
@@ -123,4 +167,28 @@ object Admin extends Controller {
   
 
  
+}
+
+
+trait Secured {
+  
+  /**
+   * Retrieve the connected user email.
+   */
+  private def username(request: RequestHeader) = request.session.get("email")
+
+  /**
+   * Redirect to login if the user in not authorized.
+   */
+  private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Admin.login)
+  
+  // --
+  
+  /** 
+   * Action for authenticated users.
+   */
+  def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+    Action(request => f(user)(request))
+  }
+
 }
