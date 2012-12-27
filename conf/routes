@@ -13,6 +13,8 @@ GET     /logout                             controllers.Admin.logout
 GET     /search								controllers.Application.searchEnrolment
 GET     /about								controllers.Application.about
 
+GET     /course/:code.xml					controllers.Application.courseXML(code: String)
+
 
 GET     /admin								controllers.Admin.admin
 GET     /admin/courses                  	controllers.Admin.courses

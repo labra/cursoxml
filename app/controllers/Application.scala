@@ -51,6 +51,17 @@ object Application extends Controller {
    ) 
   }
 
+  def courseXML(code: String) = Action { implicit request =>
+      val maybeCourse = Course.findCourse(code)
+      maybeCourse match {
+        case None => NotFound(Messages("CourseNotFound"))
+        case Some(course) => {
+           val enrols = Enrolment.lookupEnrolment(course.code)
+           Ok(prepareXML(course,enrols))
+        }
+      }
+  }
+
   def prepareJson(course: Course, enrols: List[(Student,Double)]) : String = {
     "JSON " + enrols
   }
