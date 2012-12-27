@@ -30,9 +30,9 @@ object InitialData {
       ).foreach(Course.create)
 
       Seq(
-        Student(Id(1),"123","Jose","Torres"),
-        Student(Id(2),"124","Juan","Camino"),
-        Student(Id(3),"125","Luis","Morcilla")
+        Student(Id(1),"123","Jose","Torres","jose@abc.org",43.363129,-5.847645),
+        Student(Id(2),"124","Juan","Camino","juan@abc.org",43.5,-5.847645),
+        Student(Id(3),"125","Luis","Morcilla","luis@abc.org",43.36,-5.47)
       ).foreach(Student.create)
 
       Seq(

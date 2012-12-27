@@ -14,12 +14,18 @@
         <tr>
         <th>@Messages("First Name")</th>
         <th>@Messages("Last Name")</th>
+        <th>@Messages("Email")</th>
+        <th>@Messages("Lat")</th>
+        <th>@Messages("Long")</th>
         <th>@Messages("Grade")</th>
         </tr>
         @enrolments.map { t =>
         <tr>
          <td>@t._1.firstName</td>
          <td>@t._1.lastName</td>
+         <td>@t._1.email</td>
+         <td>@t._1.lat</td>
+         <td>@t._1.long</td>
          <td>@t._2</td>
       	<tr>
       	}

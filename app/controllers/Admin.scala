@@ -130,7 +130,10 @@ object Admin extends Controller  with Secured {
       "id" -> ignored(NotAssigned:Pk[Long]),
       "dni" -> text,
       "firstName" -> text,
-      "lastName" -> text
+      "lastName" -> text,
+      "email" -> text,
+      "lat" -> of[Double],
+      "long" -> of[Double]
      )(Student.apply)(Student.unapply)
   )
 

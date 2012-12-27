@@ -13,6 +13,9 @@
               <td>@student.dni</td>
               <td>@student.firstName</td>
               <td>@student.lastName</td>
+              <td>@student.email</td>
+              <td>@student.lat</td>
+              <td>@student.long</td>
               <td>@form(routes.Admin.deleteStudent(student.id.get)) {
                     <input type="submit" value="Delete">
                 }
@@ -29,6 +32,9 @@
             @inputText(studentForm("dni"), '_label -> "DNI")
             @inputText(studentForm("firstName"), '_label -> "First name")
             @inputText(studentForm("lastName"), '_label -> "Last name")
+            @inputText(studentForm("email"), '_label -> "Email")
+            @inputText(studentForm("lat"), '_label -> "Lat")
+            @inputText(studentForm("long"), '_label -> "Long")
         </fieldset>
         
         <div class="actions">

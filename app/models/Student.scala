@@ -11,14 +11,23 @@ case class Student(
 	id: Pk[Long], 
 	dni: String,
     firstName: String,
-    lastName: String
+    lastName: String,
+    email: String,
+    lat: Double,
+    long: Double
 )
 
 object Student {
 
   val student = {
-	get[Pk[Long]]("id") ~ get[String]("dni") ~ get[String]("firstName") ~ get[String]("lastName") map {
-  	  case id~dni~firstName~lastName => Student(id, dni, firstName, lastName)
+	get[Pk[Long]]("id") ~ 
+	get[String]("dni") ~ 
+	get[String]("firstName") ~ 
+	get[String]("lastName") ~
+	get[String]("email") ~
+	get[Double]("lat") ~
+	get[Double]("long") map {
+  	  case id~dni~firstName~lastName~email~lat~long => Student(id, dni, firstName, lastName,email,lat,long)
   	}
   }
   
@@ -30,8 +39,8 @@ object Student {
     // Only creates a new language if it didn't exist
     if (lookup(student.dni) == None)
 	  DB.withConnection { implicit c =>
-	  	SQL("insert into student (dni, firstName, lastName) values ('%s', '%s', '%s')".
-	  	     format(student.dni,student.firstName,student.lastName)).executeUpdate()
+	  	SQL("insert into student (dni, firstName, lastName, email, lat, long) values ('%s', '%s', '%s','%s',%s,%s)".
+	  	     format(student.dni,student.firstName,student.lastName, student.email,student.lat,student.long)).executeUpdate()
 	  }
   }
   

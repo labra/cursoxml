@@ -10,6 +10,9 @@ CREATE TABLE student (
     dni 			varchar(100) not null,
     firstName 		varchar(255) not null,
     lastName 		varchar(255) not null,
+    email			varchar(255) not null,
+    lat 		    double,
+    long			double,
     constraint 		pk_student primary key (id)
 );
 

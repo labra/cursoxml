@@ -36,13 +36,19 @@ object Enrolment {
 	get[String]("dni") ~ 
 	get[String]("firstName") ~ 
 	get[String]("lastName") ~ 
+	get[String]("email") ~ 
+	get[Double]("lat") ~ 
+	get[Double]("long") ~ 
 	get[Double]("grade") map {
   	  case id ~
   	  	   dni ~
   	  	   firstName ~
   	  	   lastName ~
+  	  	   email ~
+  	  	   lat ~
+  	  	   long ~
   	  	   grade => {
-  	  		 (Student(id,dni,firstName,lastName),grade)
+  	  		 (Student(id,dni,firstName,lastName,email,lat,long),grade)
   	  	   }
   	}
   }
@@ -93,7 +99,7 @@ object Enrolment {
       }	  	   
       case Some(courseId) => {
     	  val query = 
-    			  """SELECT DISTINCT student.id, student.dni, student.firstName,student.lastName, enrolment.grade
+    			  """SELECT DISTINCT student.id, student.dni, student.firstName,student.lastName, student.email, student.lat, student.long, enrolment.grade
     			  		FROM enrolment, course, student
     			  		WHERE 
     			  			enrolment.courseid = '%s' and
