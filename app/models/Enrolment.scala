@@ -67,6 +67,7 @@ object Enrolment {
 	  	            enrolment.grade)).executeUpdate()
 	  }
   }
+  
   def delete(id: Pk[Long]) {
 		DB.withConnection { implicit c =>
     	SQL("delete from enrolment where id = {id}").on(

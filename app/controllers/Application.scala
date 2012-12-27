@@ -20,8 +20,8 @@ object Application extends Controller {
     
     request match {
       case Accepts.Html() => Ok(views.html.index(None, List(),searchForm))
-      case Accepts.Json() => Ok("JSON")
-      case Accepts.Xml() => Ok("XML")
+//      case Accepts.Json() => Ok("JSON")
+//      case Accepts.Xml() => Ok("XML")
     }
   }
 
@@ -38,7 +38,13 @@ object Application extends Controller {
       val code = searchField.course
       val course = Course.findCourse(code)
       val enrols = Enrolment.lookupEnrolment(code)
-      Ok(views.html.index(course, enrols,searchForm))
+      request match {
+      case Accepts.Html() => Ok(views.html.index(course, enrols, searchForm))
+      case Accepts.Json() => Ok("JSON" + enrols)
+      case Accepts.Xml() => Ok("XML" + enrols)
+    }
+
+      
     }
    ) 
   }
