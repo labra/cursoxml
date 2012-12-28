@@ -1,4 +1,4 @@
-@(course: Option[Course], enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
+@(courses: List[Course], course: Option[Course], enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
 
 @import helper._
 
@@ -33,9 +33,13 @@
      </table>
     }
     @form(routes.Application.searchEnrolment) {
-	  <fieldset>        
-        @inputText(searchForm("course"), '_label -> "Course") 
-      </fieldset>  
+      <select name="course">
+       @courses.map { c =>
+         <option value="@c.code">@c.code</option>
+       }
+      </select>
+        <!-- inputText(searchForm("course"), '_label -> "Course")  -->
+        <!--  select(searchForm("course"), courses, '_label -> "Course") -->
       <input type="submit" value="@Messages("Search") ">
         
     }

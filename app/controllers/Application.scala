@@ -19,7 +19,7 @@ object Application extends Controller {
   def index = Action { implicit request =>
     
     request match {
-      case Accepts.Html() => Ok(views.html.index(None, List(),searchForm))
+      case Accepts.Html() => Ok(views.html.index(courses, None, List(),searchForm))
 //      case Accepts.Json() => Ok("JSON")
 //      case Accepts.Xml() => Ok("XML")
     }
@@ -29,11 +29,11 @@ object Application extends Controller {
     Ok(views.html.about())
   }
   
-  def home(flash : Flash) = views.html.index(None,List(),searchForm)(flash)
+  def home(flash : Flash) = views.html.index(courses, None, List(),searchForm)(flash)
   
   def searchEnrolment = Action { implicit request =>
     searchForm.bindFromRequest.fold(
-    errors => BadRequest(views.html.index(None,List(),errors)),
+    errors => BadRequest(views.html.index(courses,None,List(),errors)),
     searchField => {
       val maybeCourse = Course.findCourse(searchField.course)
       maybeCourse match {
@@ -41,7 +41,7 @@ object Application extends Controller {
         case Some(course) => {
            val enrols = Enrolment.lookupEnrolment(course.code)
            request match {
-             case Accepts.Html() => Ok(views.html.index(Some(course), enrols, searchForm))
+             case Accepts.Html() => Ok(views.html.index(courses,Some(course), enrols, searchForm))
              case Accepts.Json() => Ok(prepareJson(course,enrols))
              case Accepts.Xml() => Ok(prepareXML(course,enrols))
            }        
@@ -90,4 +90,5 @@ object Application extends Controller {
      )(SearchField.apply)(SearchField.unapply)
   )
 
+  def courses = Course.all
 }
