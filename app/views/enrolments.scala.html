@@ -1,8 +1,8 @@
-@(enrolments: List[ViewEnrolment], enrolmentForm: Form[ViewEnrolment],defaultLanguage: Lang)
+@(lang:Lang, enrolments: List[ViewEnrolment], enrolmentForm: Form[ViewEnrolment])
 
 @import helper._
 
-@main("Curso XML") {
+@main(lang) {
     
     <h2>Admin Enrolments</h2>
     <p>Number of enrolments: @enrolments.size</h2>
@@ -19,7 +19,7 @@
             <td>@t.dni</td>
             <td>@t.grade</td>
             <td>@form(routes.Admin.deleteEnrolment(t.id)) {
-                    <input type="submit" value="@Messages("Delete")(defaultLanguage)">
+                    <input type="submit" value="@Messages("Delete")(lang)">
                 }</td>
         </tr>
         }

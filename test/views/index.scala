@@ -3,6 +3,7 @@ import org.specs2.mutable._
 
 import play.api.test._
 import play.api.test.Helpers._
+import play.api.i18n._
 
 class IndexSpec extends Specification {
 
@@ -15,14 +16,14 @@ class IndexSpec extends Specification {
 
   def e1 = {
     implicit val flash = new play.api.mvc.Flash(Map(("message","My flash"))) 
-	val html = views.html.index(List(),Application.searchForm)
+	val html = views.html.index(List(),Seq(),Lang("es"),None,List(),Application.searchForm)
     contentType(html) must equalTo("text/html")
     contentAsString(html) must contain("My flash")
   }
   
   def e2 = {
     implicit val flash = new play.api.mvc.Flash(Map(("message","My flash"))) 
-	val html = views.html.index(List(),Application.searchForm)
+	val html = views.html.index(List(),Seq(),Lang("es"),None,List(),Application.searchForm)
     contentType(html) must equalTo("text/html")
     contentAsString(html) must contain("My flash")
   }

@@ -11,6 +11,7 @@ POST    /login                              controllers.Admin.authenticate
 GET     /logout                             controllers.Admin.logout
 
 GET     /search								controllers.Application.searchEnrolment
+GET     /setLang							controllers.Application.setLang
 GET     /about								controllers.Application.about
 
 GET     /course/:code.xml					controllers.Application.courseXML(code: String)

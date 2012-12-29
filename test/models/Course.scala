@@ -10,7 +10,7 @@ class CourseSpec extends Specification {
 
   "create Course" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      Course.create("xml","XML course","2012","2013")
+      Course.create(Course(Id(1),"xml","XML course","2012","2013"))
       val id = Course.lookup("xml")
 	  id must beSome  
     }
@@ -19,9 +19,9 @@ class CourseSpec extends Specification {
    "create the same Course several times" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       val code = "xml"
-      Course.create(code,"xml 1","","")
-      Course.create(code,"xml 2","","")
-      Course.create(code,"xml 3","","")
+      Course.create(Course(Id(1),code,"xml 1","",""))
+      Course.create(Course(Id(2),code,"xml 2","",""))
+      Course.create(Course(Id(3),code,"xml 3","",""))
       val id = Course.lookup(code)
       id must beSome  
     }
@@ -31,14 +31,15 @@ class CourseSpec extends Specification {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       val code1 = "xml"
       val code2 = "xpath"
-      Course.create(code1,"xml","","")
-      Course.create(code2,"xpath","","")
+      val sizeInitial = Course.all().size
+      Course.create(Course(Id(1),code1,"xml","",""))
+      Course.create(Course(Id(2),code2,"xpath","",""))
       val id1 = Course.lookup(code1)
       val id2 = Course.lookup(code2)
 	  id1 must beSome  
       id2 must beSome
       id1 must_!= id2
-      Course.all().size must be_==(2)
+      (Course.all().size - sizeInitial) must be_==(2)
     }
    }
 
@@ -46,8 +47,8 @@ class CourseSpec extends Specification {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       val code1 = "code1"
       val code2 = "code2"
-      Course.create(code1,"code 1","","")
-      Course.create(code2,"code 2","","")
+      Course.create(Course(Id(1),code1,"code 1","",""))
+      Course.create(Course(Id(2),code2,"code 2","",""))
 
       val id = Course.lookup(code1)
       id must beSome  

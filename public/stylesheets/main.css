@@ -19,3 +19,16 @@ h2.result {
 h2.result a {
 	color: green;
 }
+
+div.languageSelection {
+	text-align: right;
+}
+
+footer {
+ text-align: center;
+}
+
+footer li {
+	list-style: none; 
+	display: inline;
+}

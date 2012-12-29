@@ -1,27 +1,29 @@
-@(title: String)(content: Html)
+@(lang:Lang)(content: Html)
 
 <!DOCTYPE html>
 
 <html>
     <head>
-        <title>@title</title>
+        <title>@Messages("title")(lang)</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
     </head>
     <body>
     <div class="title">
-    	<h1>Curso XML</h1>
+    	<h1>@Messages("Title")(lang)</h1>
     </div>
     
-        @content
-    
+    @content
+
+   <footer> 
     <nav>
      <ul>
-     <li><a href="@routes.Application.index">Home</a></li>
-     <li><a href="@routes.Admin.admin">Admin</a></li>
-     <li><a href="@routes.Application.about">About</a></li>
+     <li><a href="@routes.Application.index">@Messages("Home")(lang)</a></li>
+     <li><a href="@routes.Admin.admin">@Messages("Admin")(lang)</a></li>
+     <li><a href="@routes.Application.about">@Messages("About")(lang)</a></li>
      </ul>
     </nav>
+    </footer>
     </body>
 </html>

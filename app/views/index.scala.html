@@ -1,23 +1,35 @@
-@(courses: List[Course], course: Option[Course], enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
+@(courses: List[Course], langs: Seq[Lang], lang: Lang, course: Option[Course], enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
 
 @import helper._
 
-@main("CursoXML") {
+@main(lang) {
     
+ 	<div class="languageSelection">
+    	@form(routes.Application.setLang) {
+		@Messages("AvailableLanguages")(lang)
+	    <select name="lang">
+		 @langs.map { lang => 
+      		<option value="@lang.language">@Messages(lang.language)(lang)</option>
+    	}
+	    </select>
+	    <input type="submit" value="@Messages("Submit")(lang)">
+	}
+    </div>
+
     <h2 class="result">@flash.get("message").getOrElse("")</h2>
     
     @if(course.isEmpty) {
-     <p>Search a course code (ex. xml) </p>
+     <p>@Messages("SelectCourseCode")(lang)</p>
     } else {
-     <p>Course: @course.get.name (@course.get.code)</p>
+     <p>@Messages("Course")(lang): @course.get.name (@course.get.code)</p>
      <table>
         <tr>
-        <th>@Messages("First Name")</th>
-        <th>@Messages("Last Name")</th>
-        <th>@Messages("Email")</th>
-        <th>@Messages("Lat")</th>
-        <th>@Messages("Long")</th>
-        <th>@Messages("Grade")</th>
+        <th>@Messages("FirstName")(lang)</th>
+        <th>@Messages("LastName")(lang)</th>
+        <th>@Messages("Email")(lang)</th>
+        <th>@Messages("Lat")(lang)</th>
+        <th>@Messages("Long")(lang)</th>
+        <th>@Messages("Grade")(lang)</th>
         </tr>
         @enrolments.map { t =>
         <tr>
@@ -38,9 +50,7 @@
          <option value="@c.code">@c.code</option>
        }
       </select>
-        <!-- inputText(searchForm("course"), '_label -> "Course")  -->
-        <!--  select(searchForm("course"), courses, '_label -> "Course") -->
-      <input type="submit" value="@Messages("Search") ">
+      <input type="submit" value="@Messages("Search")(lang) ">
         
     }
     

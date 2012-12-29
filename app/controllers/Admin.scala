@@ -8,11 +8,14 @@ import play.api.data.format.Formats._
 import models._
 import play.api.i18n._
 import anorm._
+import play.api.Play.current
 
 object Admin extends Controller  with Secured {
   
-  // -- Authentication
-
+  def langs = Lang.availables
+  
+  def defaultLang = Lang.preferred(Lang.availables).language
+  
   val loginForm = Form(
     tuple(
       "email" -> text,
@@ -26,7 +29,7 @@ object Admin extends Controller  with Secured {
    * Login page.
    */
   def login = Action { implicit request =>
-    Ok(views.html.login(loginForm))
+    Ok(views.html.login(lang,loginForm))
   }
 
   /**
@@ -34,7 +37,7 @@ object Admin extends Controller  with Secured {
    */
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(views.html.login(formWithErrors)),
+      formWithErrors => BadRequest(views.html.login(lang,formWithErrors)),
       user => Redirect(routes.Admin.admin).withSession("email" -> user._1)
     )
   }
@@ -49,9 +52,12 @@ object Admin extends Controller  with Secured {
   }
 
   
-  def admin = IsAuthenticated { username => _ =>
+  def admin = IsAuthenticated { username => request =>
     User.findByEmail(username).map { user =>
-      Ok(views.html.admin())
+      val lang = request.session.get("prefLang").getOrElse(defaultLang)
+      println("Admin Session: " + request.session.get("prefLang"))
+    
+      Ok(views.html.admin(langs,Lang(lang)))
     }.getOrElse(Forbidden)
   }
   
@@ -146,12 +152,14 @@ object Admin extends Controller  with Secured {
      )(ViewEnrolment.apply)(ViewEnrolment.unapply)
   )
   
-   def courses = Action {
-	  Ok(views.html.courses(Course.all(), courseForm))
+   def courses = Action { implicit request => 
+      val lang = request.session.get("prefLang").getOrElse(defaultLang)
+	  Ok(views.html.courses(Lang(lang), Course.all(), courseForm))
   }
 
-  def students = Action { 	  
-    Ok(views.html.students(Student.all(), studentForm))
+  def students = Action { implicit request =>
+     val lang = request.session.get("prefLang").getOrElse(defaultLang)
+     Ok(views.html.students(Lang(lang), Student.all(), studentForm))
   }
 
   def viewEnrolments : List[ViewEnrolment] = {
@@ -163,13 +171,10 @@ object Admin extends Controller  with Secured {
   }
 
   def enrolments = Action { request =>
-    // TODO select default language
-    Ok(views.html.enrolments(viewEnrolments,enrolmentForm,Lang("es")))
+    val lang = request.session.get("prefLang").getOrElse(defaultLang)
+    Ok(views.html.enrolments(Lang(lang), viewEnrolments, enrolmentForm))
   }
 
-  
-
- 
 }
 
 

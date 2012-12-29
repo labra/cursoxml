@@ -9,31 +9,42 @@ import models._
 import play.api.i18n._
 import anorm._
 import views.html.defaultpages.badRequest
+import play.api.Play.current
 
 object Application extends Controller {
   
-  var languages : Seq[Lang] = Seq()
-    
-  implicit val flash = new play.api.mvc.Flash(Map(("message",""))) 
+  def langs : Seq[Lang] = Lang.availables
 
-  def index = Action { implicit request =>
+  def getLang (session : Session) = {
+    val defaultLang = Lang.preferred(Lang.availables).language
+    val lang = session.get("prefLang").getOrElse(defaultLang)
+    Lang(lang)
+  }   
     
+  def setLang = Action { implicit request =>
+  	langForm.bindFromRequest.fold(
+  		errors => NotFound("Cannot select language" + errors),
+  		lang => { 
+  		  Redirect(routes.Application.index).withSession("prefLang" -> lang)
+  		}
+    )
+  }
+  
+  def index = Action { implicit request =>
+    val lang = getLang(session)
     request match {
-      case Accepts.Html() => Ok(views.html.index(courses, None, List(),searchForm))
-//      case Accepts.Json() => Ok("JSON")
-//      case Accepts.Xml() => Ok("XML")
+      case Accepts.Html() => Ok(views.html.index(courses, langs, lang, None, List(),searchForm))
     }
   }
 
   def about = Action { implicit request =>
-    Ok(views.html.about())
+    val lang = getLang(session)
+    Ok(views.html.about(lang))
   }
-  
-  def home(flash : Flash) = views.html.index(courses, None, List(),searchForm)(flash)
   
   def searchEnrolment = Action { implicit request =>
     searchForm.bindFromRequest.fold(
-    errors => BadRequest(views.html.index(courses,None,List(),errors)),
+    errors => BadRequest(views.html.index(courses,langs,lang,None,List(),errors)),
     searchField => {
       val maybeCourse = Course.findCourse(searchField.course)
       maybeCourse match {
@@ -41,7 +52,7 @@ object Application extends Controller {
         case Some(course) => {
            val enrols = Enrolment.lookupEnrolment(course.code)
            request match {
-             case Accepts.Html() => Ok(views.html.index(courses,Some(course), enrols, searchForm))
+             case Accepts.Html() => Ok(views.html.index(courses,langs,getLang(session),Some(course), enrols, searchForm))
              case Accepts.Json() => Ok(prepareJson(course,enrols))
              case Accepts.Xml() => Ok(prepareXML(course,enrols))
            }        
@@ -88,6 +99,10 @@ object Application extends Controller {
      mapping(
       "course" -> nonEmptyText
      )(SearchField.apply)(SearchField.unapply)
+  )
+
+  val langForm : Form[String] = Form (
+      "lang" -> nonEmptyText
   )
 
   def courses = Course.all

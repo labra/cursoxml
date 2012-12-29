@@ -12,7 +12,7 @@ class StudentSpec extends Specification {
       val dni = "22"
       val firstName = "Jose"
       val lastName = "Jose"
-      Student.create(dni,firstName,lastName)
+      Student.create(Student(Id(1),dni,firstName,lastName,"jose@ex.org",2.3,3.4))
       val id = Student.lookup(dni)
 	  id must beSome  
     }
@@ -23,9 +23,9 @@ class StudentSpec extends Specification {
       val dni = "22"
       val firstName = "Jose"
       val lastName = "Jose"
-      Student.create(dni,firstName,lastName)
-      Student.create(dni,firstName,lastName)
-      Student.create(dni,firstName,lastName)
+      Student.create(Student(Id(1),dni,firstName,lastName,"j@kiko.org",2.3,3.4))
+      Student.create(Student(Id(2),dni,firstName,lastName,"j@kiko.org",2.3,3.4))
+      Student.create(Student(Id(3),dni,firstName,lastName,"j@kiko.org",2.3,3.4))
       val id = Student.lookup(dni)
 	  id must beSome  
     }
@@ -33,8 +33,8 @@ class StudentSpec extends Specification {
 
     "delete Student" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      Student.create("22","Jose","Labra")
-      Student.create("33", "Juan","Torre")
+      Student.create(Student(Id(1),"22","Jose","Labra","j@kiko.org",2.3,3.4))
+      Student.create(Student(Id(2),"33", "Juan","Torre","j@kiko.org",2.3,3.4))
 
       val id = Student.lookup("22")
       id must beSome  
