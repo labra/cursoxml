@@ -32,9 +32,7 @@ object Application extends Controller {
   
   def index = Action { implicit request =>
     val lang = getLang(session)
-    request match {
-      case Accepts.Html() => Ok(views.html.index(courses, langs, lang, None, List(),searchForm))
-    }
+    Ok(views.html.index(courses, langs, lang, None, List(),searchForm))
   }
 
   def about = Action { implicit request =>

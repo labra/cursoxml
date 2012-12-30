@@ -1,4 +1,5 @@
 import play.api._
+import play.api.mvc._
 
 import models._
 import anorm._
@@ -9,6 +10,10 @@ object Global extends GlobalSettings {
     InitialData.insert()
   }
   
+  override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+     println("executed before every request:" + request)
+     super.onRouteRequest(request)
+  }
 }
 
 object InitialData {

@@ -29,13 +29,11 @@ class CourseSpec extends Specification {
 
   "create other Course" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-      val code1 = "xml"
-      val code2 = "xpath"
       val sizeInitial = Course.all().size
-      Course.create(Course(Id(1),code1,"xml","",""))
-      Course.create(Course(Id(2),code2,"xpath","",""))
-      val id1 = Course.lookup(code1)
-      val id2 = Course.lookup(code2)
+      Course.create(Course(Id(11),"a","xml","",""))
+      Course.create(Course(Id(12),"b","xpath","",""))
+      val id1 = Course.lookup("a")
+      val id2 = Course.lookup("b")
 	  id1 must beSome  
       id2 must beSome
       id1 must_!= id2

@@ -15,12 +15,13 @@ class ApplicationSpec extends Specification { def is =
   															end
 
   def e1 = {
-	  val result = Application.index(FakeRequest())
-  
-	  status(result) must equalTo(OK)
-	  contentType(result) must beSome("text/html")
-	  charset(result) must beSome("utf-8")
-   }
+		running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+			val result = Application.index(FakeRequest())
+			status(result) must equalTo(OK)
+			contentType(result) must beSome("text/html")
+			charset(result) must beSome("utf-8")
+		}
+  }  
   
 
 
