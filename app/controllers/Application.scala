@@ -15,8 +15,9 @@ object Application extends Controller {
   
   def langs : Seq[Lang] = Lang.availables
 
-  def getLang (session : Session) = {
-    val defaultLang = Lang.preferred(Lang.availables).language
+  def getLang (request: Request[AnyContent], session : Session) = {
+    val langsReq = request.acceptLanguages
+    val defaultLang = Lang.preferred(langsReq.++(Lang.availables)).language
     val lang = session.get("prefLang").getOrElse(defaultLang)
     Lang(lang)
   }   
@@ -31,12 +32,12 @@ object Application extends Controller {
   }
   
   def index = Action { implicit request =>
-    val lang = getLang(session)
+    val lang = getLang(request,session)
     Ok(views.html.index(courses, langs, lang, None, List(),searchForm))
   }
 
   def about = Action { implicit request =>
-    val lang = getLang(session)
+    val lang = getLang(request,session)
     Ok(views.html.about(lang))
   }
   
@@ -50,7 +51,11 @@ object Application extends Controller {
         case Some(course) => {
            val enrols = Enrolment.lookupEnrolment(course.code)
            request match {
-             case Accepts.Html() => Ok(views.html.index(courses,langs,getLang(session),Some(course), enrols, searchForm))
+             case Accepts.Html() => Ok(views.html.index(courses,langs,
+            		 					getLang(request,session),
+            		 					Some(course), 
+            		 					enrols, 
+            		 					searchForm))
              case Accepts.Json() => Ok(prepareJson(course,enrols))
              case Accepts.Xml() => Ok(prepareXML(course,enrols))
            }        

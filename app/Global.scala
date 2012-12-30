@@ -10,15 +10,13 @@ object Global extends GlobalSettings {
     InitialData.insert()
   }
   
-  override def onRouteRequest(request: RequestHeader): Option[Handler] = {
+/*  override def onRouteRequest(request: RequestHeader): Option[Handler] = {
      println("executed before every request:" + request)
      super.onRouteRequest(request)
-  }
+  } */
 }
 
 object InitialData {
-  
-  def date(str: String) = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(str)
   
   def insert() = {
     
