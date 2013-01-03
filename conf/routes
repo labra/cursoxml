@@ -30,5 +30,12 @@ GET     /admin/enrolments                 	controllers.Admin.enrolments
 POST    /admin/enrolments                  	controllers.Admin.newEnrolment
 POST    /admin/enrolments/:id/delete       	controllers.Admin.deleteEnrolment(id: Long)
 
+GET     /xml								controllers.XML.getAlumnos
+PUT     /xml/:id							controllers.XML.putAlumno(id:Long)
+POST    /xml								controllers.XML.postAlumnos
+DELETE  /xml/:id							controllers.XML.deleteAlumno(id:Long)
+
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
