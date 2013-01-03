@@ -30,10 +30,11 @@ GET     /admin/enrolments                 	controllers.Admin.enrolments
 POST    /admin/enrolments                  	controllers.Admin.newEnrolment
 POST    /admin/enrolments/:id/delete       	controllers.Admin.deleteEnrolment(id: Long)
 
-GET     /xml								controllers.XML.getAlumnos
-PUT     /xml/:id							controllers.XML.putAlumno(id:Long)
-POST    /xml								controllers.XML.postAlumnos
-DELETE  /xml/:id							controllers.XML.deleteAlumno(id:Long)
+GET     /students								controllers.Students.getStudents
+GET     /students/:id							controllers.Students.getStudent(id:Long)
+PUT     /students/:id							controllers.Students.putStudent(id:Long)
+POST    /students								controllers.Students.postStudents
+DELETE  /students/:id							controllers.Students.deleteStudent(id:Long)
 
 
 

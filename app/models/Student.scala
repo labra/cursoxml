@@ -88,5 +88,25 @@ object Student {
     if (found.isEmpty) None
     else Some(found.head)
   }
+  
+  def update(id:Long, student: Student) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update student
+          set dni = {dni}, firstName = {firstName}, lastName = {lastName}, email= {email}, lat = {lat}, long = {long}
+          where id = {id}
+        """
+      ).on(
+        'id -> id,
+        'dni -> student.dni,
+        'firstName -> student.firstName,
+        'lastName -> student.lastName,
+        'email -> student.email,
+        'lat -> student.lat,
+        'long -> student.long
+      ).executeUpdate()
+    }
+  }
 
 }
