@@ -11,6 +11,7 @@ import anorm._
 import play.api.Play.current
 import play.api.libs.json._
 import play.api.libs.Jsonp
+import play.api.libs.iteratee._
 
 object Students extends Controller {
   
@@ -31,7 +32,12 @@ object Students extends Controller {
       }
       case TextXML() => Ok(showXMLStudents(students))
       case Accepts.Xml() => Ok(showXMLStudents(students))
-      case TextTurtle() => Ok("Turtle format not yet implemented")
+      case TextTurtle() => {
+       SimpleResult(
+    		   header = ResponseHeader(200, Map(CONTENT_TYPE -> "text/turtle")), 
+    		   body = Enumerator(showTurtleStudents(students))
+       ) 
+      }
       case _ => Ok("Cannot handle accept header: " + request.accept.mkString(",") )
     }
   }
@@ -48,7 +54,20 @@ object Students extends Controller {
                 ))
    ))
   }
-    
+   
+  def showTurtleStudents(students : List[Student]) = {
+"""@prefix e: <http://example.org/> .
+@prefix foaf: 	<http://xmlns.com/foaf/0.1/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+""" + students.map( s => 
+        "\n\ne:" + s.id + " e:dni \"" + s.dni + "\" ; \n" + 
+                "  foaf:givenName \"" + s.firstName + "\"; \n" +
+                "  foaf:familyName \"" + s.lastName + "\"; \n" +
+                "  foaf:mbox \"" + s.email + "\"; \n" +
+                "  geo:lat " + s.lat + "; \n" +
+                "  geo:long " + s.long + " . "
+                ).mkString
+}
   
   def showXMLStudents(students : List[Student]) = 
     <students>
