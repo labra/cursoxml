@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <script src="javascripts/jquery-1.7.2.min.js"></script>
+  <script>
+  function cargaPalabras() {
+    var language = "es";
+    $.getJSON("http://hangman2play.herokuapp.com/words/"+ language + ".json?callback=?", function(data) {
+	 var output = "<ul>";
+	 for (var i in data.words) {
+		      output+="<li>" + data.words[i] + "</li>";
+	}
+	output+="</ul>";
+	document.getElementById("Palabras").innerHTML=output;
+  });
+  }
+  
+  </script>
+ </head>
+<h1>Ejemplo servicio web</h1>
+<div id="Palabras"></div>
+<input type="button" onclick="cargaPalabras()" value="Carga palabras">
+</html>
