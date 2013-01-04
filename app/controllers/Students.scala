@@ -9,12 +9,46 @@ import models._
 import play.api.i18n._
 import anorm._
 import play.api.Play.current
+import play.api.libs.json._
+import play.api.libs.Jsonp
 
 object Students extends Controller {
   
+  val TextXML = Accepting("text/xml")
+  val TextTurtle = Accepting("text/turtle")
+
   def getStudents = Action { implicit request =>
-    Ok(showXMLStudents(students))
+    request match {
+      case Accepts.Html() => {
+       Ok(views.html.students(Language.getLang(request,session),students,studentForm)) 
+      }
+      case Accepts.Json() => {
+       val json = showJsonStudents(students)
+       request.queryString.get("callback").flatMap(_.headOption) match {
+        case Some(callback) => Ok(Jsonp(callback, json))
+        case None => Ok(json)
+       }
+      }
+      case TextXML() => Ok(showXMLStudents(students))
+      case Accepts.Xml() => Ok(showXMLStudents(students))
+      case TextTurtle() => Ok("Turtle format not yet implemented")
+      case _ => Ok("Cannot handle accept header: " + request.accept.mkString(",") )
+    }
   }
+
+  def showJsonStudents(students : List[Student]) = {
+    Json.toJson (students.map( s => 
+        Json.toJson(Map (
+    			"dni" -> Json.toJson(s.dni),
+                "firstName" -> Json.toJson (s.firstName),
+                "lastName" -> Json.toJson (s.lastName),
+                "email" -> Json.toJson (s.email),
+                "lat" -> Json.toJson (s.lat),
+                "long" -> Json.toJson (s.long)
+                ))
+   ))
+  }
+    
   
   def showXMLStudents(students : List[Student]) = 
     <students>
