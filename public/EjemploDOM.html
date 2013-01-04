@@ -1,0 +1,18 @@
+<html>
+  <head><title>Prueba</title>
+  <script type="text/javascript"><!--
+       function clona() {
+          var raiz=document.documentElement;
+          var cuerpo=raiz.getElementsByTagName("body")[0];
+          var texto=cuerpo.firstChild;
+          var textoNuevo=texto.cloneNode(true);
+          cuerpo.appendChild(textoNuevo);
+      }
+     --></script>
+  </head>
+  <body>
+    Hola
+    <input type="button" 
+               name="Clona" value="Saluda!" onclick="clona();" /> 
+   </body>
+</html>
